@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Loading…</title>
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --brand-green: #6DBE45;
+      --brand-dark: #101820;
+      --muted: #6b7280;
+      --bg: #f4f6f8;
+      --card: #ffffff;
+      --glass: rgba(255,255,255,0.65);
+      --radius: 12px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
+    body{background: linear-gradient(180deg, #f7fbf8 0%, var(--bg) 100%); display:flex; align-items:center; justify-content:center; padding:32px;}
+    .app { width:100%; max-width:980px; background:transparent; border-radius:16px; overflow:hidden; box-shadow:0 10px 30px rgba(16,24,40,0.08); display:flex; gap:0; }
+    .left { flex:1.1; padding:36px; background: linear-gradient(180deg, rgba(255,255,255,0.25), rgba(255,255,255,0.1)), radial-gradient(600px 300px at 10% 10%, rgba(109,190,69,0.08), transparent 20%), var(--card); border-right: 1px solid rgba(16,24,40,0.03); display:flex; flex-direction:column; justify-content:center; }
+    .right { flex:0.9; padding:28px; background:linear-gradient(180deg,#0f1724, #071022); color:white; display:flex; flex-direction:column; justify-content:center; }
+
+    header.sticky { position:sticky; top:0; z-index:50; display:flex; align-items:center; gap:12px; margin-bottom:18px; }
+    .logo { width:46px; height:46px; border-radius:10px; background:linear-gradient(135deg,var(--brand-green), #2a9d3b); display:flex; align-items:center; justify-content:center; color:white; font-weight:700; font-family:Poppins, Inter; font-size:18px; box-shadow:0 6px 18px rgba(109,190,69,0.14); }
+    .title { display:flex; flex-direction:column; }
+    .title .top { font-weight:700; color:var(--brand-dark); font-size:16px; }
+    .title .sub { color:var(--muted); font-size:13px; margin-top:2px; }
+
+    .card { background:var(--card); border-radius:var(--radius); padding:22px; box-shadow:0 8px 24px rgba(16,24,40,0.06); }
+    label{display:block; font-size:13px; color:var(--muted); margin-bottom:6px; font-weight:600;}
+    input[type="text"], input[type="password"]{ width:100%; padding:12px 14px; border-radius:10px; border:1px solid #e6e9ee; font-size:14px; outline:none; }
+    .actions{display:flex; gap:12px; margin-top:14px;}
+    button.primary{ background:var(--brand-green); color:var(--brand-dark); padding:12px 14px; border-radius:10px; border:none; font-weight:700; cursor:pointer; flex:1; box-shadow: 0 8px 24px rgba(109,190,69,0.12); }
+    button.ghost{ background:transparent; border:1px solid rgba(16,24,40,0.06); padding:12px 14px; border-radius:10px; color:var(--brand-dark); cursor:pointer; flex:1; }
+
+    .brand-splash{ font-size:18px; font-weight:700; color:var(--brand-dark); margin-bottom:8px;}
+    .lead{ color:var(--muted); font-size:14px; margin-bottom:18px; }
+
+    .right .h1{ font-size:22px; font-weight:700; margin-bottom:8px; }
+    .right .p{ color:rgba(255,255,255,0.9); font-size:14px; line-height:1.5; opacity:0.95; }
+
+    @media (max-width:900px){ .app{flex-direction:column;} .right{order:2} }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="left">
+      <header class="sticky">
+        <div class="logo" id="logo">GD</div>
+        <div class="title">
+          <div class="top" id="org-title">InsightX</div>
+          <div class="sub" id="org-sub">Loading…</div>
+        </div>
+      </header>
+
+      <div class="card" style="max-width:420px;">
+        <div class="brand-splash" id="brand-splash">Welcome to InsightX</div>
+        <div class="lead" id="brand-lead">Signin to start capturing customer interviews and generate product insights — demo mode (no backend required).</div>
+
+        <div style="margin-top:8px;">
+          <label for="username">Username</label>
+          <input id="username" type="text" placeholder="you@company.com" autocomplete="username">
+        </div>
+
+        <div style="margin-top:12px;">
+          <label for="password">Password</label>
+          <input id="password" type="password" placeholder="password" autocomplete="current-password">
+        </div>
+
+        <div class="actions">
+          <button class="primary" id="loginBtn">Sign in</button>
+          <button class="ghost" id="demoBtn">Demo</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="right">
+      <div style="max-width:360px;">
+        <div class="h1" id="right-title">Capture richer interviews</div>
+        <div class="p">Record voice, attach documents, and quickly tag interviews by product. The Insights tab will aggregate pain points, features and competitor comparisons using AI (dummy data for demo).</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Load config.json and inject org strings
+  async function loadConfig(){
+    try{
+      const r = await fetch('config.json');
+      const cfg = await r.json();
+      const org = cfg.org || 'InsightX';
+      document.title = `${org} InsightX — Login`;
+      document.getElementById('org-title').textContent = `${org} InsightX`;
+      document.getElementById('org-sub').textContent = `${org} Product Intelligence`;
+      document.getElementById('brand-splash').textContent = `${org} InsightX`;
+      document.getElementById('brand-lead').textContent = `Demo portal for ${org} product discovery — login to continue.`;
+      document.getElementById('logo').textContent = org.split(' ').map(s=>s[0]).join('').slice(0,2).toUpperCase();
+      document.getElementById('right-title').textContent = `Capture ${org} customer interviews`;
+    }catch(err){
+      console.warn('Could not load config.json — defaulting', err);
+    }
+  }
+  loadConfig();
+
+  // Login actions
+  document.getElementById('loginBtn').addEventListener('click', ()=>{ location.href='dashboard.html'; });
+  document.getElementById('demoBtn').addEventListener('click', ()=>{ location.href='dashboard.html'; });
+
+  // allow Enter key
+  document.querySelectorAll('input').forEach(i=> i.addEventListener('keyup', (e)=>{ if(e.key==='Enter') location.href='dashboard.html'; }));
+</script>
+</body>
+</html>

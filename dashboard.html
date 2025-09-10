@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Loading…</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --brand-green: #6DBE45;
+      --accent: #2a9d3b;
+      --brand-dark: #0f1724;
+      --bg: #f4f6f8;
+      --muted: #6b7280;
+      --card: #ffffff;
+      --radius: 12px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
+    body{background:linear-gradient(180deg,#fbfdfc, #f4f6f8); color:var(--brand-dark); }
+
+    /* Header */
+    .app-header{
+      position:sticky; top:0; z-index:100; display:flex; align-items:center; justify-content:space-between; gap:20px;
+      padding:14px 20px; background:linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.8)); backdrop-filter: blur(4px);
+      border-bottom: 1px solid rgba(16,24,40,0.04);
+    }
+    .brand { display:flex; align-items:center; gap:12px; }
+    .logo { width:44px; height:44px; border-radius:10px; background:linear-gradient(135deg,var(--brand-green), var(--accent)); display:flex; align-items:center; justify-content:center; color:white; font-weight:800; font-family:Poppins; font-size:16px; box-shadow:0 8px 24px rgba(109,190,69,0.12); }
+    .brand-info { display:flex; flex-direction:column; }
+    .brand-info .title { font-weight:700; font-size:15px; color:var(--brand-dark); }
+    .brand-info .sub { font-size:13px; color:var(--muted); margin-top:2px; }
+
+    .header-actions { display:flex; align-items:center; gap:12px; }
+
+    /* Layout */
+    .container { padding:22px; max-width:1200px; margin:0 auto; }
+
+    .tabs {
+      display:flex; gap:8px; align-items:center; margin-top:18px; position: -webkit-sticky; position: sticky; top:74px; z-index:90;
+      background:transparent; padding:8px 0;
+    }
+    .tab { padding:10px 16px; border-radius:12px; cursor:pointer; font-weight:600; color:var(--muted); }
+    .tab.active{ background:var(--card); color:var(--brand-dark); box-shadow:0 6px 18px rgba(16,24,40,0.06); border:1px solid rgba(16,24,40,0.04); }
+
+    .grid { display:grid; grid-template-columns: 1fr 360px; gap:22px; margin-top:18px; align-items:start; }
+    .panel { background:var(--card); padding:18px; border-radius:14px; box-shadow:0 8px 24px rgba(16,24,40,0.04); }
+
+    label{display:block; font-size:13px; color:var(--muted); margin-bottom:8px; font-weight:600;}
+    input[type="text"], textarea, select { width:100%; padding:12px; border-radius:10px; border:1px solid #e6e9ee; font-size:14px; outline:none; }
+    .btn { padding:10px 14px; border-radius:10px; border:none; cursor:pointer; font-weight:700; }
+    .btn.primary { background:var(--brand-green); color:var(--brand-dark); box-shadow: 0 8px 22px rgba(109,190,69,0.12); }
+    .btn.ghost { background:transparent; border:1px solid rgba(16,24,40,0.06); color:var(--brand-dark); }
+
+    .item { padding:12px; border-radius:10px; border:1px solid rgba(16,24,40,0.04); background:linear-gradient(180deg,#fff,#fbfcfd); margin-bottom:10px; display:flex; gap:12px; }
+    .badge { font-size:12px; padding:6px 8px; border-radius:8px; background:var(--brand-green); color:white; font-weight:700; align-self:flex-start; }
+    .meta { color:var(--muted); font-size:13px; margin-top:6px; }
+
+    .filter-row { display:flex; gap:10px; align-items:center; margin-bottom:14px; }
+    .filter-row .chip { padding:6px 10px; background:transparent; border-radius:999px; border:1px solid rgba(16,24,40,0.06); cursor:pointer; font-weight:600; color:var(--muted);}
+    .filter-row .chip.active{ background:var(--brand-green); color:var(--brand-dark); box-shadow:0 6px 18px rgba(109,190,69,0.08); }
+
+    .right .section-title { font-weight:700; margin-bottom:8px; font-size:14px; }
+    .stat { display:flex; justify-content:space-between; gap:12px; padding:12px; border-radius:10px; background:linear-gradient(180deg,#fbfdfc,#fff); border:1px solid rgba(16,24,40,0.03); margin-bottom:10px; }
+    .muted { color:var(--muted); font-size:13px; }
+
+    /* responsive */
+    @media (max-width:980px){
+      .grid{ grid-template-columns: 1fr; }
+      .tabs{ position:static; top:auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-header" role="banner">
+    <div class="brand">
+      <div class="logo" id="logo">GD</div>
+      <div class="brand-info">
+        <div class="title" id="main-title">InsightX</div>
+        <div class="sub" id="main-sub">Product intelligence</div>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <div class="muted" id="signed-as">Signed in as Demo</div>
+      <button class="btn ghost" onclick="location.href='index.html'">Sign out</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="tabs" role="tablist" aria-label="Main tabs">
+      <div class="tab active" data-tab="interview" onclick="openTab('interview')">Interviews</div>
+      <div class="tab" data-tab="insights" onclick="openTab('insights')">Insights</div>
+    </div>
+
+    <div class="grid">
+      <!-- Left column (main) -->
+      <div id="leftColumn">
+        <!-- Interview panel (left) -->
+        <div id="interview-panel" class="panel">
+          <h3 style="margin-top:0">Record Interview & Upload Docs</h3>
+
+          <div style="display:flex; gap:12px; margin-bottom:12px;">
+            <div style="flex:1">
+              <label>Interview Title</label>
+              <input id="int-title" placeholder="Call with Jane — domain setup issues" />
+            </div>
+            <div style="width:170px;">
+              <label>Product</label>
+              <select id="int-product">
+                <option value="Domains">Domains</option>
+                <option value="Website Builder">Website Builder</option>
+                <option value="Email">Email</option>
+              </select>
+            </div>
+          </div>
+
+          <label>Notes / Transcript</label>
+          <textarea id="int-notes" rows="5" placeholder="Paste transcript or notes..."></textarea>
+
+          <div style="display:flex; gap:10px; margin-top:12px;">
+            <button class="btn primary" onclick="saveInterview()">Save (demo)</button>
+            <button class="btn ghost" onclick="startRecording()">🎤 Record (dummy)</button>
+            <input id="fileInput" type="file" multiple style="display:none" />
+            <button class="btn ghost" onclick="document.getElementById('fileInput').click()">📎 Attach files</button>
+          </div>
+
+          <div style="margin-top:18px;">
+            <h4 style="margin:0 0 6px 0;">Saved (demo) Interviews</h4>
+            <div id="savedList" class="muted">No saved interviews yet.</div>
+          </div>
+        </div>
+
+        <!-- Insights main panel (left) -->
+        <div id="insights-panel" class="panel" style="display:none; margin-top:22px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <h3 style="margin:0">Insights & Pain Points</h3>
+              <div class="muted" style="margin-top:6px;">Aggregated from submitted interviews (demo dataset)</div>
+            </div>
+            <div>
+              <button class="btn ghost" onclick="downloadDemo()">Export</button>
+              <button class="btn primary" onclick="openContribute()">Contribute</button>
+            </div>
+          </div>
+
+          <div style="margin-top:16px;">
+            <label style="margin-bottom:8px; display:block;">Filter by Product</label>
+            <div class="filter-row" id="filterRow">
+              <div class="chip active" data-value="All" onclick="setFilter(this)">All</div>
+              <div class="chip" data-value="Domains" onclick="setFilter(this)">Domains</div>
+              <div class="chip" data-value="Website Builder" onclick="setFilter(this)">Website Builder</div>
+              <div class="chip" data-value="Email" onclick="setFilter(this)">Email</div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px;">
+            <div style="display:flex; gap:12px; align-items:center; margin-bottom:8px;">
+              <div class="muted">Showing <span id="countResults">0</span> items</div>
+            </div>
+
+            <div id="insightsList" style="margin-top:6px;"></div>
+
+            <hr style="margin:18px 0; border:none; border-top:1px solid rgba(16,24,40,0.04);" />
+
+            <h4 style="margin:0 0 10px 0;">Features we can build (ideas)</h4>
+            <div id="featuresList"></div>
+
+            <hr style="margin:18px 0; border:none; border-top:1px solid rgba(16,24,40,0.04);" />
+
+            <h4 style="margin:0 0 10px 0;">Competitive Snapshot</h4>
+            <div id="competitorsList"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right column (side) -->
+      <div id="rightColumn">
+        <!-- Solutions: show either Activity or Quick Stats + Personas depending on tab -->
+        <!-- Activity panel (shown on Interviews tab) -->
+        <div id="activityPanel" class="panel">
+          <div class="section-title">Activity</div>
+          <div class="muted" style="margin-bottom:10px;">Your saved interviews and quick actions</div>
+
+          <div style="margin-top:6px;">
+            <div style="font-weight:700; margin-bottom:8px;">Saved Interviews (recent)</div>
+            <div id="savedListSide" class="muted">No saved interviews yet.</div>
+          </div>
+
+          <div style="margin-top:12px;">
+            <!-- <div class="section-title">Actions</div>
+            <div style="display:flex; gap:8px; margin-top:8px;">
+              <button class="btn primary" onclick="openContribute()">Contribute transcript</button>
+              <button class="btn ghost" onclick="downloadDemo()">Export insights</button>
+            </div> -->
+          </div>
+        </div>
+
+        <!-- Quick Stats panel (shown on Insights tab) -->
+        <div id="quickStatsPanel" class="panel" style="display:none; margin-top:16px;">
+          <div class="section-title">Quick stats</div>
+          <div id="quickStatsContainer">
+            <!-- injected -->
+          </div>
+        </div>
+
+        <!-- Personas panel (shown on Insights tab) -->
+        <div id="personasPanel" class="panel" style="display:none; margin-top:16px;">
+          <div class="section-title">Top Personas</div>
+          <div id="personasContainer">
+            <!-- injected -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Load config.json
+  async function loadConfig(){
+    try{
+      const r = await fetch('config.json');
+      const cfg = await r.json();
+      const org = cfg.org || 'InsightX';
+      document.title = `${org} InsightX`;
+      document.getElementById('logo').textContent = org.split(' ').map(s=>s[0]).join('').slice(0,2).toUpperCase();
+      document.getElementById('main-title').textContent = `${org} InsightX`;
+      document.getElementById('main-sub').textContent = `${org} Product Intelligence`;
+    }catch(err){
+      console.warn('config.json not found, using defaults.');
+    }
+  }
+  loadConfig();
+
+  // Tab switching logic - toggles left and right panels appropriately
+  function openTab(tab){
+    document.querySelectorAll('.tab').forEach(t=> t.classList.remove('active'));
+    document.querySelectorAll('[data-tab]').forEach(el=>{
+      if(el.dataset.tab === tab) el.classList.add('active');
+    });
+
+    const interviewPanel = document.getElementById('interview-panel');
+    const insightsPanel = document.getElementById('insights-panel');
+
+    const activityPanel = document.getElementById('activityPanel');
+    const quickStatsPanel = document.getElementById('quickStatsPanel');
+    const personasPanel = document.getElementById('personasPanel');
+
+    if(tab === 'interview'){
+      // Left: show interview; hide insights
+      interviewPanel.style.display = 'block';
+      insightsPanel.style.display = 'none';
+      // Right: show activity; hide stats/personas
+      activityPanel.style.display = 'block';
+      quickStatsPanel.style.display = 'none';
+      personasPanel.style.display = 'none';
+    } else {
+      // Left: show insights; hide interview
+      interviewPanel.style.display = 'none';
+      insightsPanel.style.display = 'block';
+      // Right: show stats & personas; hide activity
+      activityPanel.style.display = 'none';
+      quickStatsPanel.style.display = 'block';
+      personasPanel.style.display = 'block';
+      // refresh side content in case filter changed
+      renderQuickStats();
+      renderPersonas();
+    }
+  }
+
+  function startRecording(){ alert('Recording (dummy): this demo does not capture audio.'); }
+
+  // Save interview to localStorage demo
+  function saveInterview(){
+    const title = document.getElementById('int-title').value || 'Untitled interview';
+    const product = document.getElementById('int-product').value;
+    const notes = document.getElementById('int-notes').value || '';
+    const saved = JSON.parse(localStorage.getItem('insightx_interviews') || '[]');
+    saved.unshift({id:Date.now(), title, product, notes});
+    localStorage.setItem('insightx_interviews', JSON.stringify(saved));
+    renderSavedList();
+    renderSavedListSide();
+    alert('Saved (demo) — would normally upload to backend.');
+    document.getElementById('int-title').value=''; document.getElementById('int-notes').value='';
+  }
+
+  function renderSavedList(){
+    const saved = JSON.parse(localStorage.getItem('insightx_interviews') || '[]');
+    const el = document.getElementById('savedList');
+    if(!saved.length) { el.textContent = 'No saved interviews yet.'; return; }
+    el.innerHTML = '';
+    saved.slice(0,6).forEach(s=>{
+      const d = document.createElement('div');
+      d.className = 'item';
+      d.innerHTML = `<div style="flex:1"><div style="font-weight:700">${escapeHtml(s.title)}</div><div class="meta">${escapeHtml(s.notes.slice(0,120))}</div></div><div class="badge">${escapeHtml(s.product)}</div>`;
+      el.appendChild(d);
+    });
+  }
+
+  function renderSavedListSide(){
+    const saved = JSON.parse(localStorage.getItem('insightx_interviews') || '[]');
+    const el = document.getElementById('savedListSide');
+    if(!saved.length) { el.textContent = 'No saved interviews yet.'; return; }
+    el.innerHTML = '';
+    saved.slice(0,4).forEach(s=>{
+      const d = document.createElement('div');
+      d.className = 'item';
+      d.style.padding='10px';
+      d.innerHTML = `<div style="flex:1"><div style="font-weight:700">${escapeHtml(s.title)}</div><div class="meta">${escapeHtml(s.product)}</div></div>`;
+      el.appendChild(d);
+    });
+  }
+
+  // Demo datasets
+  const DEMO_ITEMS = [
+    { id:1, type:'Insight', title:'Users get stuck during domain DNS setup', product:'Domains', description:'Multiple steps and unfamiliar DNS terms confuse small business owners.' },
+    { id:2, type:'Pain', title:'Onboarding is long', product:'Website Builder', description:'New users abandon during site setup due to too many choices.' },
+    { id:3, type:'Insight', title:'Bundled email increases trust', product:'Email', description:'Customers prefer domain+email package to look professional.' },
+    { id:4, type:'Pain', title:'Pricing is unclear', product:'Domains', description:'Users see hidden fees at checkout; transparent pricing needed.' },
+    { id:5, type:'Insight', title:'Templates not localized', product:'Website Builder', description:'Templates are English-first; local markets need regional templates.' },
+    { id:6, type:'Pain', title:'Support wait times', product:'Email', description:'Users report long delays when setting up email forwarding.' },
+    { id:7, type:'Insight', title:'1-click starter site boosts activation', product:'Website Builder', description:'Prebuilt starter site with images reduces time-to-live.' },
+    { id:8, type:'Pain', title:'Domain transfer complexity', product:'Domains', description:'Transferring domains from other providers is perceived as risky.' }
+  ];
+
+  const DEMO_FEATURES = [
+    { product:'Domains', title:'Simple DNS Wizard', desc:'Guided DNS helper that auto-configures common records for popular services.' },
+    { product:'Website Builder', title:'Localized Template Packs', desc:'Region-specific templates and copy for faster local deployment.' },
+    { product:'Email', title:'Auto-email Setup', desc:'One-click email routing and onboarding for new domains.' }
+  ];
+
+  const DEMO_COMPETITORS = [
+    { product:'Domains', competitor:'Namecheap', note:'Transparent low-cost pricing for domains; strong transfer experience.' },
+    { product:'Website Builder', competitor:'Wix', note:'Drag-and-drop editor with many templates; strong UX for non-technical users.' },
+    { product:'Email', competitor:'Google Workspace', note:'Enterprise-grade email and collaboration; perceived as premium.' }
+  ];
+
+  const DEMO_PERSONAS = [
+    { name:'Startup Founder', product:'Domains', desc:'Wants one-click domain + hosting setup and low price.' },
+    { name:'Freelancer', product:'Website Builder', desc:'Wants portfolio ease and fast set-up.' },
+    { name:'Local Business', product:'Email', desc:'Needs email + domain + payments in a bundle.' }
+  ];
+
+  // Filtering UI logic
+  let activeFilter = 'All';
+  function setFilter(el){
+    document.querySelectorAll('#filterRow .chip').forEach(c=> c.classList.remove('active'));
+    el.classList.add('active');
+    activeFilter = el.dataset.value;
+    renderInsights();
+    renderFeatures();
+    renderCompetitors();
+    renderPersonas();
+    renderQuickStats(); // update side stats
+  }
+
+  function renderInsights(){
+    const container = document.getElementById('insightsList');
+    container.innerHTML = '';
+    const items = DEMO_ITEMS.filter(it => activeFilter === 'All' ? true : it.product === activeFilter);
+    document.getElementById('countResults').textContent = items.length;
+    if(!items.length) {
+      container.innerHTML = '<div class="muted">No items matching filter.</div>'; return;
+    }
+    items.forEach(it=>{
+      const div = document.createElement('div');
+      div.className = 'item';
+      const tagColor = getTagColor(it.product);
+      div.innerHTML = `
+        <div style="flex:1">
+          <div style="font-weight:700">${escapeHtml(it.title)}</div>
+          <div class="meta">${escapeHtml(it.description)}</div>
+          <div style="margin-top:8px; font-size:13px;"><span style="color:var(--muted)">Type:</span> <strong style="margin-left:8px">${escapeHtml(it.type)}</strong></div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px; align-items:flex-end;">
+          <div class="badge" style="background:${tagColor}">${escapeHtml(it.product)}</div>
+          <button class="btn ghost" style="font-size:13px;padding:8px 10px" onclick="suggestSolution(${it.id})">Suggest</button>
+        </div>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  function renderFeatures(){
+    const container = document.getElementById('featuresList');
+    container.innerHTML = '';
+    DEMO_FEATURES.filter(f => activeFilter === 'All' ? true : f.product === activeFilter)
+      .forEach(f=>{
+        const d = document.createElement('div');
+        d.className = 'item';
+        d.innerHTML = `<div style="flex:1"><div style="font-weight:700">${escapeHtml(f.title)}</div><div class="meta">${escapeHtml(f.desc)}</div></div><div class="badge">${escapeHtml(f.product)}</div>`;
+        container.appendChild(d);
+      });
+  }
+
+  function renderCompetitors(){
+    const container = document.getElementById('competitorsList');
+    container.innerHTML = '';
+    DEMO_COMPETITORS.filter(c => activeFilter === 'All' ? true : c.product === activeFilter)
+      .forEach(c=>{
+        const d = document.createElement('div');
+        d.className = 'item';
+        d.innerHTML = `<div style="flex:1"><div style="font-weight:700">${escapeHtml(c.competitor)}</div><div class="meta">${escapeHtml(c.note)}</div></div><div class="badge">${escapeHtml(c.product)}</div>`;
+        container.appendChild(d);
+      });
+  }
+
+  function renderPersonas(){
+    const container = document.getElementById('personasContainer');
+    container.innerHTML = '';
+    DEMO_PERSONAS.filter(p => activeFilter === 'All' ? true : p.product === activeFilter)
+      .forEach(p=>{
+        const d = document.createElement('div');
+        d.className = 'item';
+        d.innerHTML = `<div style="flex:1"><div style="font-weight:700">${escapeHtml(p.name)}</div><div class="meta">${escapeHtml(p.desc)}</div></div><div class="badge">${escapeHtml(p.product)}</div>`;
+        container.appendChild(d);
+      });
+    if(!container.innerHTML) container.innerHTML = '<div class="muted">No personas for this filter.</div>';
+  }
+
+  function renderQuickStats(){
+    const saved = JSON.parse(localStorage.getItem('insightx_interviews') || '[]');
+    const interviewsCount = saved.length;
+    const itemsFiltered = DEMO_ITEMS.filter(it => activeFilter === 'All' ? true : it.product === activeFilter);
+    const painPointsCount = DEMO_ITEMS.filter(it => it.type.toLowerCase() === 'pain' && (activeFilter==='All' ? true : it.product === activeFilter)).length;
+    const insightsCount = DEMO_ITEMS.filter(it => it.type.toLowerCase() === 'insight' && (activeFilter==='All' ? true : it.product === activeFilter)).length;
+
+    const container = document.getElementById('quickStatsContainer');
+    container.innerHTML = `
+      <div class="stat"><div class="muted">Insights</div><div style="font-weight:800">${insightsCount}</div></div>
+      <div class="stat"><div class="muted">Pain points</div><div style="font-weight:800">${painPointsCount}</div></div>
+      <div class="stat"><div class="muted">Items (filtered)</div><div style="font-weight:800">${itemsFiltered.length}</div></div>
+    `;
+  }
+
+  function getTagColor(product){
+    if(product==='Domains') return '#2e7d32';
+    if(product==='Website Builder') return '#1565c0';
+    if(product==='Email') return '#6a1b9a';
+    return '#6DBE45';
+  }
+
+  function suggestSolution(id){
+    const it = DEMO_ITEMS.find(x=>x.id===id);
+    if(!it) return;
+    alert(`Suggested solution for "${it.title}"\n\n( Demo ) — propose a simple feature or run AI analysis in a real product.`);
+  }
+
+  function downloadDemo(){
+    alert('Export (demo) — would export insights as CSV/PDF in a full product.');
+  }
+  function openContribute(){
+    alert('Contribute (demo) — in a real product this opens a modal to submit transcript or recording.');
+  }
+
+  function escapeHtml(unsafe){ return String(unsafe).replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' }[m])); }
+
+  // Initialize page
+  (function init(){
+    renderSavedList();
+    renderSavedListSide();
+    renderInsights();
+    renderFeatures();
+    renderCompetitors();
+    renderPersonas();
+    renderQuickStats();
+  })();
+
+  // Re-render on filter change (chips)
+  document.getElementById('filterRow').addEventListener('click', e => {
+    if(e.target && e.target.classList.contains('chip')) setFilter(e.target);
+  });
+</script>
+</body>
+</html>
