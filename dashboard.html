@@ -90,7 +90,7 @@
   <div class="container">
     <div class="tabs" role="tablist" aria-label="Main tabs">
       <div class="tab active" data-tab="interview" onclick="openTab('interview')">Interviews</div>
-      <div class="tab" data-tab="insights" onclick="openTab('insights')">Insights</div>
+      <div class="tab" data-tab="insights" onclick="openTab('insights')">Research Dashboard</div>
     </div>
 
     <div class="grid">
@@ -131,12 +131,12 @@
           </div>
         </div>
 
-        <!-- Insights main panel (left) -->
+        <!-- Pain Points main panel (left) -->
         <div id="insights-panel" class="panel" style="display:none; margin-top:22px;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <div>
-              <h3 style="margin:0">Insights & Pain Points</h3>
-              <div class="muted" style="margin-top:6px;">Aggregated from submitted interviews (demo dataset)</div>
+              <h3 style="margin:0">Findings</h3>
+              <div class="muted" style="margin-top:6px;">Aggregated findings from submitted interviews (demo dataset)</div>
             </div>
             <div>
               <button class="btn ghost" onclick="downloadDemo()">Export</button>
@@ -156,7 +156,7 @@
 
           <div style="margin-top:12px;">
             <div style="display:flex; gap:12px; align-items:center; margin-bottom:8px;">
-              <div class="muted">Showing <span id="countResults">0</span> items</div>
+              <div class="muted">Showing <span id="countResults">0</span> pain points</div>
             </div>
 
             <div id="insightsList" style="margin-top:6px;"></div>
@@ -188,15 +188,11 @@
           </div>
 
           <div style="margin-top:12px;">
-            <!-- <div class="section-title">Actions</div>
-            <div style="display:flex; gap:8px; margin-top:8px;">
-              <button class="btn primary" onclick="openContribute()">Contribute transcript</button>
-              <button class="btn ghost" onclick="downloadDemo()">Export insights</button>
-            </div> -->
+            <!-- actions placeholder -->
           </div>
         </div>
 
-        <!-- Quick Stats panel (shown on Insights tab) -->
+        <!-- Quick Stats panel (shown on Pain Points tab) -->
         <div id="quickStatsPanel" class="panel" style="display:none; margin-top:16px;">
           <div class="section-title">Quick stats</div>
           <div id="quickStatsContainer">
@@ -204,7 +200,7 @@
           </div>
         </div>
 
-        <!-- Personas panel (shown on Insights tab) -->
+        <!-- Personas panel (shown on Pain Points tab) -->
         <div id="personasPanel" class="panel" style="display:none; margin-top:16px;">
           <div class="section-title">Top Personas</div>
           <div id="personasContainer">
@@ -247,7 +243,7 @@
     const personasPanel = document.getElementById('personasPanel');
 
     if(tab === 'interview'){
-      // Left: show interview; hide insights
+      // Left: show interview; hide pain-points
       interviewPanel.style.display = 'block';
       insightsPanel.style.display = 'none';
       // Right: show activity; hide stats/personas
@@ -255,7 +251,7 @@
       quickStatsPanel.style.display = 'none';
       personasPanel.style.display = 'none';
     } else {
-      // Left: show insights; hide interview
+      // Left: show pain-points; hide interview
       interviewPanel.style.display = 'none';
       insightsPanel.style.display = 'block';
       // Right: show stats & personas; hide activity
@@ -311,15 +307,15 @@
     });
   }
 
-  // Demo datasets
+  // Demo datasets — all entries are pain points now (type: 'Pain')
   const DEMO_ITEMS = [
-    { id:1, type:'Insight', title:'Users get stuck during domain DNS setup', product:'Domains', description:'Multiple steps and unfamiliar DNS terms confuse small business owners.' },
+    { id:1, type:'Pain', title:'Users get stuck during domain DNS setup', product:'Domains', description:'Multiple steps and unfamiliar DNS terms confuse small business owners.' },
     { id:2, type:'Pain', title:'Onboarding is long', product:'Website Builder', description:'New users abandon during site setup due to too many choices.' },
-    { id:3, type:'Insight', title:'Bundled email increases trust', product:'Email', description:'Customers prefer domain+email package to look professional.' },
+    { id:3, type:'Pain', title:'Bundled email increases trust (perceived pain/opportunity)', product:'Email', description:'Customers prefer domain+email package to look professional — lack of bundling is a pain.' },
     { id:4, type:'Pain', title:'Pricing is unclear', product:'Domains', description:'Users see hidden fees at checkout; transparent pricing needed.' },
-    { id:5, type:'Insight', title:'Templates not localized', product:'Website Builder', description:'Templates are English-first; local markets need regional templates.' },
+    { id:5, type:'Pain', title:'Templates not localized', product:'Website Builder', description:'Templates are English-first; local markets need regional templates.' },
     { id:6, type:'Pain', title:'Support wait times', product:'Email', description:'Users report long delays when setting up email forwarding.' },
-    { id:7, type:'Insight', title:'1-click starter site boosts activation', product:'Website Builder', description:'Prebuilt starter site with images reduces time-to-live.' },
+    { id:7, type:'Pain', title:'1-click starter site missing for many segments', product:'Website Builder', description:'Lack of prebuilt starter sites increases time-to-live for users.' },
     { id:8, type:'Pain', title:'Domain transfer complexity', product:'Domains', description:'Transferring domains from other providers is perceived as risky.' }
   ];
 
@@ -347,20 +343,21 @@
     document.querySelectorAll('#filterRow .chip').forEach(c=> c.classList.remove('active'));
     el.classList.add('active');
     activeFilter = el.dataset.value;
-    renderInsights();
+    renderPainPoints();
     renderFeatures();
     renderCompetitors();
     renderPersonas();
     renderQuickStats(); // update side stats
   }
 
-  function renderInsights(){
+  // Render pain points (previously renderInsights)
+  function renderPainPoints(){
     const container = document.getElementById('insightsList');
     container.innerHTML = '';
     const items = DEMO_ITEMS.filter(it => activeFilter === 'All' ? true : it.product === activeFilter);
     document.getElementById('countResults').textContent = items.length;
     if(!items.length) {
-      container.innerHTML = '<div class="muted">No items matching filter.</div>'; return;
+      container.innerHTML = '<div class="muted">No pain points matching filter.</div>'; return;
     }
     items.forEach(it=>{
       const div = document.createElement('div');
@@ -422,12 +419,12 @@
     const saved = JSON.parse(localStorage.getItem('insightx_interviews') || '[]');
     const interviewsCount = saved.length;
     const itemsFiltered = DEMO_ITEMS.filter(it => activeFilter === 'All' ? true : it.product === activeFilter);
-    const painPointsCount = DEMO_ITEMS.filter(it => it.type.toLowerCase() === 'pain' && (activeFilter==='All' ? true : it.product === activeFilter)).length;
-    const insightsCount = DEMO_ITEMS.filter(it => it.type.toLowerCase() === 'insight' && (activeFilter==='All' ? true : it.product === activeFilter)).length;
+    // All items are pain points, so:
+    const painPointsCount = itemsFiltered.length;
 
     const container = document.getElementById('quickStatsContainer');
     container.innerHTML = `
-      <div class="stat"><div class="muted">Insights</div><div style="font-weight:800">${insightsCount}</div></div>
+      <div class="stat"><div class="muted">Interviews saved</div><div style="font-weight:800">${interviewsCount}</div></div>
       <div class="stat"><div class="muted">Pain points</div><div style="font-weight:800">${painPointsCount}</div></div>
       <div class="stat"><div class="muted">Items (filtered)</div><div style="font-weight:800">${itemsFiltered.length}</div></div>
     `;
@@ -447,7 +444,7 @@
   }
 
   function downloadDemo(){
-    alert('Export (demo) — would export insights as CSV/PDF in a full product.');
+    alert('Export (demo) — would export pain points as CSV/PDF in a full product.');
   }
   function openContribute(){
     alert('Contribute (demo) — in a real product this opens a modal to submit transcript or recording.');
@@ -459,7 +456,7 @@
   (function init(){
     renderSavedList();
     renderSavedListSide();
-    renderInsights();
+    renderPainPoints();
     renderFeatures();
     renderCompetitors();
     renderPersonas();
